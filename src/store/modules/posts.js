@@ -47,9 +47,11 @@ const mutations = {
 const actions = {
   async fetchPosts({ commit }, params) {
     try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/posts', { params })
+      const response = await axios.get('http://localhost:3000/posts', { params })
       commit('SET_POSTS', response.data)
       commit('SET_TOTAL_PAGE', Math.ceil(+response.headers['x-total-count'] / 10 || 1))
+
+      // console.log(response.data) //OBJECTS//
 
       return Promise.resolve(response)
     } catch (error) {
@@ -59,7 +61,7 @@ const actions = {
 
   async createPosts({ commit }, post) {
     try {
-      const { data } = await axios.post('https://jsonplaceholder.typicode.com/posts', post)
+      const { data } = await axios.post('http://localhost:3000/posts', post)
       commit('ADD_POST', data)
 
       return Promise.resolve(data)
@@ -69,7 +71,7 @@ const actions = {
   },
   async updatePost({ commit }, post) {
     try {
-      const { data } = await axios.put('https://jsonplaceholder.typicode.com/posts/${post.id}', post)
+      const { data } = await axios.put(`http://localhost:3000/posts/${post.id}`, post)
       commit('UPDATE_POST', data)
 
       return Promise.resolve(data)
@@ -79,7 +81,7 @@ const actions = {
   },
   async deletePost({ commit }, post) {
     try {
-      await axios.delete('https://jsonplaceholder.typicode.com/posts/${post.id}', post)
+      await axios.delete(`http://localhost:3000/posts/${post.id}`, post)
       commit('DELETE_POST', post)
 
       return Promise.resolve(post)

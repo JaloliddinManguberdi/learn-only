@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-data-table
-        :items="posts"
+        :items="users"
         :headers="headers"
         disable-filtering
         disable-pagination
@@ -16,7 +16,7 @@
         <template #top>
           <v-card-title>
             <span>
-              Posts
+              Users
             </span>
             <v-spacer />
             <!--Search-->
@@ -25,30 +25,29 @@
               v-model="search"
               type="text"
               class="form-v-input__control mr-2"
-              placeholder="search"
+              placeholder="search user"
               label="Search"
               @blur="init"
             />
-
             <v-btn
               color="primary"
               @click="openSidebar"
             >
-              Create post
+              Create user info
             </v-btn>
           </v-card-title>
         </template>
         <template #footer>
           <v-pagination
-            v-if="!loading && posts.length"
+            v-if="!loading && users.length"
             v-model="options.page"
             :length="totalPages"
             :total-visible="7"
           >
           </v-pagination>
         </template>
-        <template #item.body="{ item }">
-          {{ item.body | filterBody }}
+        <template #item.phone="{ item }">
+          {{ item.phone | filterUser }}
         </template>
         <template
           #item.actions="{ item }"
@@ -57,7 +56,7 @@
             small
             icon
             color="error"
-            @click="deletePost(item)"
+            @click="deleteUser(item)"
           >
             <v-icon>
               {{ icons.mdiDeleteCircleOutline }}
@@ -76,17 +75,16 @@
         </template>
       </v-data-table>
     </v-col>
-    <posts-sidebar
+    <users-sidebar
       ref="sidebar"
       fixed
     />
   </v-row>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import { mdiDeleteCircleOutline, mdiPencilBoxOutline } from '@mdi/js'
-import PostsSidebar from './PostsSidebar.vue'
+import UsersSidebar from './UsersSidebar.vue'
 
 const headers = [
   {
@@ -94,16 +92,20 @@ const headers = [
     value: 'id',
   },
   {
-    text: 'User ID',
-    value: 'userId',
+    text: 'Name',
+    value: 'name',
   },
   {
-    text: 'Title',
-    value: 'title',
+    text: 'User name',
+    value: 'username',
   },
   {
-    text: 'Body',
-    value: 'body',
+    text: 'Email',
+    value: 'email',
+  },
+  {
+    text: 'Phone',
+    value: 'phone',
   },
   {
     text: 'Actions',
@@ -112,16 +114,15 @@ const headers = [
 ]
 
 export default {
-  name: 'Posts',
-  components: { PostsSidebar },
+  name: 'Users',
+  components: { UsersSidebar },
   filters: {
-    filterBody(val) {
+    filterUser(val) {
       if (val && val.length > 100) return `${val.slice(0, 100)}...`
 
       return val
     },
   },
-  props: ['post'],
   data() {
     return {
       loading: false,
@@ -135,8 +136,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      posts: 'posts/getItems',
-      totalPages: 'posts/getTotalPages',
+      users: 'users/getItems',
+      totalPages: 'users/getTotalPages',
     }),
   },
   watch: {
@@ -148,28 +149,28 @@ export default {
   methods: {
     async init(force = false) {
       try {
-        if (this.posts.length && !force) return
+        if (this.users.length && !force) return
         this.loading = true
-        await this.$store.dispatch('posts/fetchPosts', {
+        await this.$store.dispatch('users/fetchUsers', {
           _page: this.options.page,
           q: this.search,
         })
       } catch (error) {
-        this.$toast.error(error.response?.data?.message || 'Error occured while fetching posts')
+        this.$toast.error(error.response?.data?.message || 'Error occured while fetching users')
       } finally {
         this.loading = false
       }
     },
-    async deletePost(post) {
+    async deleteUser(user) {
       try {
-        await this.$store.dispatch('posts/deletePost', post)
-        this.$toast.success('Post deleted succesfully!')
+        await this.$store.dispatch('users/deleteUser', user)
+        this.$toast.success('User deleted succesfully!')
       } catch (error) {
-        this.$toast.error('Error occured while deleting posts')
+        this.$toast.error('Error occured while deleting users')
       }
     },
-    openSidebar(post = null) {
-      setTimeout(() => { this.$refs.sidebar.show(post) }, 0)
+    openSidebar(user = null) {
+      setTimeout(() => { this.$refs.sidebar.show(user) }, 0)
     },
   },
 }

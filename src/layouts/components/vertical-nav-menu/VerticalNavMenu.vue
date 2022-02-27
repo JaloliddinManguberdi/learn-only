@@ -98,6 +98,11 @@
         :to="{ name: 'posts' }"
         :icon="icons.mdiPostOutline"
       ></nav-menu-link>
+      <nav-menu-link
+        title="Users"
+        :to="{ name: 'users' }"
+        :icon="icons.mdiAccountGroup"
+      ></nav-menu-link>
     </v-list>
     <a
       href="https://themeselection.com/products/materio-vuetify-vuejs-admin-template"
@@ -127,6 +132,7 @@ import {
   mdiFormSelect,
   mdiAccountCogOutline,
   mdiPostOutline,
+  mdiAccountGroup,
 } from '@mdi/js'
 import NavMenuSectionTitle from './components/NavMenuSectionTitle.vue'
 import NavMenuGroup from './components/NavMenuGroup.vue'
@@ -156,6 +162,7 @@ export default {
         mdiFormSelect,
         mdiAccountCogOutline,
         mdiPostOutline,
+        mdiAccountGroup,
       },
     }
   },
